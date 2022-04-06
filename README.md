@@ -4,6 +4,10 @@
 ```
 java -jar piscan.jar -f xxx.apk -a xxx/android.jar
 ```
+If you re-pack the jar using this repo, run
+```
+java -jar PendingIntentScan\target\PendingIntentScan-1.1-SNAPSHOT.jar -f xxx.apk -a xxx/android.jar
+```
 
 ## Publications
 
