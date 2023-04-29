@@ -1,0 +1,29 @@
+#!/bin/bash
+
+
+ROOT=$(dirname "$BASH_SOURCE")
+ROOT=$(cd "${ROOT}" && pwd)
+
+
+JAR=${ROOT}/target/PendingIntentScan-1.1-SNAPSHOT.jar
+CFG=${ROOT}/configs/android.jar
+APK="$1"
+
+function usage {
+  echo "$*"
+  echo "piscan <file.apk>"
+  echo "Optionally, set DEBUG=1 to start and wait for a java debugger to attach on port 8001."
+  exit 1
+}
+
+[ -f "${APK}" ] || usage "No APK specified"
+[ -f "${JAR}" ] || usage "Unable to find ${JAR}. Make sure you compiled with 'mvn package' ."
+[ -f "${CFG}" ] || usage "Unable to find ${CFG}. Make sure you placed this script in the PendingIntentScan root directory."
+
+DEBUG_ARGS=""
+if [ -n "${DEBUG}" ]; then
+  echo "jdb -attach 127.0.0.1:8001"
+  DEBUG_ARGS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=127.0.0.1:8001"
+fi
+
+java ${DEBUG_ARGS} -jar "${JAR}" -a "${CFG}" -f "${APK}"
